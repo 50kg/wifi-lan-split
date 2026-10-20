@@ -1,0 +1,6 @@
+# Windows tooling: keep CRLF in the working tree so Windows PowerShell 5.1 and cmd read the files as written.
+* text=auto eol=crlf
+*.png binary
+*.ico binary
+*.exe binary
+*.zip binary

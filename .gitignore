@@ -1,0 +1,27 @@
+﻿# Build output (releases are published on GitHub Releases)
+/dist/
+/build/
+
+# Machine-specific notes kept only on the author's computer
+/AGENTS.md
+/docs/当前电脑部署.md
+
+# Never commit machine state, firewall exports, captures or logs
+state.json
+state.json.*
+network-backup.json
+config.local.json
+*.wfw
+*.etl
+*.pcap
+*.pcapng
+*.log
+/backup*/
+/logs/
+/captures/
+
+# Editor files
+*.user
+*.suo
+.vs/
+.vscode/

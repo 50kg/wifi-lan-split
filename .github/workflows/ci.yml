@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Isolated tests (no network changes)
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Syntax, build, isolated tests and UI layout
+        shell: powershell
+        run: .\tests\Run-Tests.ps1
+
+      - name: Build release package
+        shell: powershell
+        run: .\build.ps1 -OutputDirectory "$env:RUNNER_TEMP\dist"
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: wifi-lan-split-dist
+          path: ${{ runner.temp }}\dist
+          retention-days: 14

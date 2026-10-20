@@ -1,0 +1,100 @@
+﻿{
+    "CheckedAt":  "2026-10-20T08:46:44.3020247+02:00",
+    "Passed":  true,
+    "Results":  [
+                    {
+                        "Check":  "Syntax",
+                        "Outcome":  "PASS",
+                        "Detail":  "13 scripts parse, all UTF-8 with BOM"
+                    },
+                    {
+                        "Check":  "Build",
+                        "Outcome":  "PASS",
+                        "Detail":  "GUI and RouteGuard compile (temp folder)"
+                    },
+                    {
+                        "Check":  "Test-Restore",
+                        "Outcome":  "PASS",
+                        "Detail":  "PASS Test-Restore: route stores and metrics, DNS (static and DHCP), metrics, rule groups, profiles, atomic state, repeat restore, cross-machine and missing-adapter refusal."
+                    },
+                    {
+                        "Check":  "Test-Setup",
+                        "Outcome":  "PASS",
+                        "Detail":  "PASS Test-Setup: backup before rules, rules before routes, blocked ranges exactly outside 192.168/16 (10/8 and 172.16/12 stay blocked), no port or program limits, hotspot rule, Wi-Fi untouched, refusals before any change."
+                    },
+                    {
+                        "Check":  "Test-Status",
+                        "Outcome":  "PASS",
+                        "Detail":  "PASS Test-Status: healthy, moved hotspot, uncovered/covered second wired NIC, stopped guard, exposed new machine, no Wi-Fi, half-applied, missing adapter, unsafe data folder, outdated guard, program- and user-limited rules, alias-limited Wired rule, rules without state.json, update hidden while firewall incomplete, change in progress."
+                    },
+                    {
+                        "Check":  "Test-Guard",
+                        "Outcome":  "PASS",
+                        "Detail":  "PASS Test-Guard: update keeps the task and stages the copy first, failed swap restores the old guard, stuck guard restarted, healthy guard untouched, foreign task replaced, old heartbeat not accepted."
+                    },
+                    {
+                        "Check":  "Test-Engine",
+                        "Outcome":  "PASS",
+                        "Detail":  "PASS Test-Engine: locked data folder (GUI and backend), loose folder tightened, verified copy, tampered and missing files refused."
+                    },
+                    {
+                        "Check":  "UI layout",
+                        "Outcome":  "PASS",
+                        "Detail":  "52 screenshots at 100-175%: no clipping, overflow or overlap found"
+                    }
+                ],
+    "NetworkChangesPerformed":  false,
+    "LiveDeploymentChanged":  false,
+    "MachineBackupsOrCapturesCopied":  false,
+    "Note":  "Isolated checks only: mocked network commands, fictional data, temp folders. Not a substitute for a real deployment, reboot or packet-capture test.",
+    "SourceFiles":  [
+                        {
+                            "File":  "src\\native\\app.manifest",
+                            "SHA256":  "4F75636A7667064EDC5C7B21F1B68D65272E958B8A12A18B74F0DA97C8C3B1C8"
+                        },
+                        {
+                            "File":  "src\\native\\LanSplit.cs",
+                            "SHA256":  "3B45D652959977CBAD534C5577F5ACB8A08A9DEDB48822E0039C3742BC6C7B6A"
+                        },
+                        {
+                            "File":  "src\\native\\RouteGuard.cs",
+                            "SHA256":  "60E71E1E63C967E42B53B915309768F75BAD63810635DADA152441EF3332E537"
+                        },
+                        {
+                            "File":  "src\\postboot\\check-after-boot.ps1",
+                            "SHA256":  "C5A98CD289BBC1A281D34AFB13DACEC8B1528754AC49A6E5CC40F05F13486D80"
+                        },
+                        {
+                            "File":  "src\\postboot\\postboot-report-helper.ps1",
+                            "SHA256":  "D8D11614959B07E2097D78599D045583B5D3CC9BCFF017C437FD99449460717B"
+                        },
+                        {
+                            "File":  "src\\postboot\\README.md",
+                            "SHA256":  "798A22A0D5589F02B8FAC405A2F423DC9C548C4D63912D2A442F438AF987AF11"
+                        },
+                        {
+                            "File":  "src\\postboot\\取消重启自动检查.cmd",
+                            "SHA256":  "30F063E06FA0F1D0EF6FCB424E07C09CE23254E7DE19BB4D8635B0BFFDFAD4A3"
+                        },
+                        {
+                            "File":  "src\\postboot\\查看重启检查结果.cmd",
+                            "SHA256":  "2B57772DDC6F97FBF3AF992D1F2FA6975A2BDF86632DA7DD6B4691202C10A8D9"
+                        },
+                        {
+                            "File":  "src\\powershell\\backend.ps1",
+                            "SHA256":  "2C36DF5415DBBC41D8E755A4CD460E2510DF0874A9E45CA452F6C9218DB988B4"
+                        },
+                        {
+                            "File":  "src\\powershell\\network-core.ps1",
+                            "SHA256":  "20F3B854C2354BF11E1F1678DFEF5145F267B89C39EF9406D661E9B38C89C281"
+                        },
+                        {
+                            "File":  "src\\powershell\\Restore.cmd",
+                            "SHA256":  "1ADFE404591C95F3C28EF09DDAC3A85D994A811C73A01E7D3294D71C993DAA8B"
+                        },
+                        {
+                            "File":  "src\\powershell\\Restore.ps1",
+                            "SHA256":  "29DB9B45793D97075259B88E3C645496FA8FF59119FC214B387086768C2F715E"
+                        }
+                    ]
+}
