@@ -1,4 +1,6 @@
-﻿# 双网分流 · wifi-lan-split
+# 双网分流 · wifi-lan-split
+
+**简体中文** | [English](README.en.md)
 
 [![CI](https://github.com/50kg/wifi-lan-split/actions/workflows/ci.yml/badge.svg)](https://github.com/50kg/wifi-lan-split/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -96,7 +98,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\Run-Tests.ps1
 - 构建到临时目录；
 - 启用、还原、状态判断、看守更新的隔离模拟；
 - 后台文件校验测试；
-- 界面在 100%–175% 缩放下的布局检查。
+- 界面在 100%–175% 缩放下的布局检查，本机屏幕和模拟的 1024×768 小屏幕各跑一遍。
 
 所有网络、防火墙和计划任务命令都先被替换成会报错的函数，漏掉替身的命令会直接让测试失败，碰不到真实系统。后两项需要管理员 PowerShell。GitHub Actions 每次提交都会运行这套测试。
 
@@ -104,6 +106,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\Run-Tests.ps1
 
 ```powershell
 .\dist\双网分流.exe --preview .\build\preview
+.\dist\双网分流.exe --preview .\build\preview-small --screen 1024x768
 ```
 
 ## 项目结构
@@ -113,7 +116,7 @@ src/native/        WinForms 界面 LanSplit.cs、路由看守 RouteGuard.cs、�
 src/powershell/    backend.ps1（检查/启用/修复/续租/还原入口）、network-core.ps1（备份、防火墙、路由、DNS）、离线还原 Restore.cmd
 src/postboot/      可选的重启后一次性检查脚本
 tests/             隔离测试与测试运行器
-docs/              使用说明、架构与安全边界、验证记录
+docs/              中文文档：使用说明、架构与安全边界、验证记录；docs/en/ 是英文版
 build.ps1          只编译和打包到 dist/，不安装、不启动
 ```
 
@@ -124,25 +127,3 @@ build.ps1          只编译和打包到 dist/，不安装、不启动
 ## 许可证
 
 [MIT](LICENSE)
-
----
-
-## English summary
-
-**wifi-lan-split** keeps a Windows 10/11 PC that is connected to both a phone hotspot (Wi-Fi) and a company LAN cable from leaking Internet traffic onto the LAN:
-
-- public traffic goes only through Wi-Fi;
-- the wired adapter can reach only `192.168.0.0/16`;
-- when Wi-Fi drops, the cable does not take over.
-
-How it works:
-
-- **Windows Firewall does the enforcement**: it blocks every non-192.168 IPv4 and all IPv6 on wired interfaces, for every app, protocol and port.
-- **A small SYSTEM service removes DHCP-added default routes** on the wired adapter.
-- **Every change is backed up first and can be restored.**
-
-The GUI is in Chinese. It checks the state read-only on every launch, verifies the SHA-256 of its backend scripts before running them as administrator, and lets only one change run at a time.
-
-Not covered: proxies or jump hosts inside the allowed LAN, VPNs/tunnels such as Tailscale, VM/WSL/Docker adapters, and anything an administrator or group policy changes.
-
-The build uses only the .NET Framework compiler that ships with Windows (`build.ps1`). The test suite (`tests/Run-Tests.ps1`) replaces every network command with a stub that fails loudly, so tests never touch the real network. Licensed under MIT.

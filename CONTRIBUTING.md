@@ -1,4 +1,6 @@
-# 参与贡献
+# 参与贡献 · Contributing
+
+**简体中文** | [English](#english)
 
 感谢你愿意改进双网分流。这个工具会改动别人电脑的防火墙和路由，所以下面这些约定比一般项目严格。
 
@@ -51,3 +53,60 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\Run-Tests.ps1
 
 - 说明改了什么、为什么改，以及如何验证：运行了哪些测试，有没有在真机上做过只读检查。
 - 涉及网络行为的改动，请写清楚“已验证 / 推断 / 未验证”。
+
+---
+
+## English
+
+Thank you for helping improve wifi-lan-split. This tool changes the firewall and routing of other people's computers, so the rules below are stricter than in most projects.
+
+### Development environment
+
+- Windows 10/11 x64, Windows PowerShell 5.1, .NET Framework 4.x.
+- No Visual Studio needed: `build.ps1` compiles with the system's own `csc.exe`.
+- Do not add dependencies that must be downloaded.
+
+### Before you start
+
+- Read [需求说明.md](需求说明.md) ([English](docs/en/requirements.md)) and [docs/en/architecture.md](docs/en/architecture.md).
+- **Do not change your own network while developing or testing.** Do not run enable, restore, renew or repair on your development machine, and do not stop RouteGuard. To verify logic, write an isolated test (see below).
+- If you really need a disconnect test, schedule an independent automatic recovery first (for example, reconnecting Wi-Fi on a timer) and keep the firewall protection in place.
+
+### Design constraints that must not change
+
+- The firewall is what blocks the Internet. Do not replace it with "raise the wired metric" or "delete the default route once".
+- The cable is allowed only `192.168.0.0/16`. Do not widen it to `10.0.0.0/8` or `172.16.0.0/12`, and do not add port limits. The hotspot subnet stays on Wi-Fi.
+- Do not claim to solve proxies, tunnels (VPNs such as Tailscale) or virtual machines.
+- Back up before changing anything; restore matches adapters by GUID and the Windows installation ID, never by interface index.
+
+### Code conventions
+
+- PowerShell must work on Windows PowerShell 5.1. A `.ps1` that contains Chinese must be saved as **UTF-8 with BOM**, or 5.1 reads it with the local code page and garbles it. Use CRLF line endings.
+- C# is limited to the C# 5 syntax that the system .NET Framework compiler supports: no `?.`, `$""`, `nameof`, `out var` or expression-bodied members.
+- PowerShell treats the Chinese curly quotes `“”` as string quotes inside double-quoted strings. Put Chinese text in single-quoted strings.
+- After changing `backend.ps1`, `network-core.ps1` or `RouteGuard.cs`, run `build.ps1` again. The window checks the hashes recorded at build time and refuses to run on a mismatch.
+- Interface text is Simplified Chinese, in words users understand; a verdict first answers "can the cable reach the Internet right now".
+
+### Tests
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\Run-Tests.ps1
+```
+
+- Every test first dot-sources `tests/TestSupport.ps1`, which replaces all network, firewall, DNS, adapter and scheduled-task commands with functions that throw. New tests must do the same, then mock the commands they use.
+- After pointing the script under test at a temp folder, call `Use-TestRoot`. It checks that no path points at `C:\ProgramData` and blocks `netsh` and `ipconfig` called by full path.
+- Test data is always made up; use documentation ranges such as `192.0.2.0/24` and `203.0.113.0/24`.
+- After changing the window, render 100%–175% screenshots with `双网分流.exe --preview <folder>`. Look through them, and check that `layout-report.txt` reports no clipped text, overflow or overlap. Add `--screen 1024x768` to simulate a small screen.
+
+### Do not commit
+
+- Any computer's `state.json`, full firewall exports (`.wfw`), adapter GUIDs or MachineGuid;
+- capture files or runtime logs;
+- real address lists of office or home networks;
+- the `dist/` and `build/` folders. `.gitignore` excludes them, and releases are published through GitHub Releases.
+
+### Pull requests
+
+- Explain what changed, why, and how you verified it: which tests ran, and whether you did a read-only check on a real machine.
+- For changes to network behaviour, state clearly what is verified, what is inferred and what is not verified.
+

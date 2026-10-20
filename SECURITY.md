@@ -1,4 +1,6 @@
-# 安全策略
+# 安全策略 · Security policy
+
+**简体中文** | [English](#english)
 
 双网分流以管理员和 SYSTEM 权限修改防火墙、路由和计划任务，因此安全问题的影响可能比一般工具大。
 
@@ -34,3 +36,43 @@
 - 外部程序一律用系统目录的完整路径启动。
 - 数据目录创建时就收紧权限；发现被预先创建或权限异常，就拒绝继续。
 - 看守的单实例锁放在受保护目录里，不使用全局互斥量。
+
+---
+
+## English
+
+wifi-lan-split changes the firewall, routes and scheduled tasks with administrator and SYSTEM rights, so a security problem in it can matter more than in an ordinary tool.
+
+### Reporting a vulnerability
+
+Please do not describe exploitable details in a public issue. Use GitHub's [private vulnerability reporting](https://github.com/50kg/wifi-lan-split/security/advisories/new) and include:
+
+- the affected version or commit;
+- steps to reproduce and prerequisites, for example whether a local standard-user account is needed;
+- the impact, for example privilege escalation, bypassing the split, or a failed restore.
+
+You will get a reply as soon as possible. Confirmed problems will be fixed, and credited in the release notes if you wish.
+
+### Threat model
+
+**In scope:**
+
+- a local standard user or non-elevated process gaining administrator or SYSTEM rights through this tool, for example by tampering with the scripts the window runs, creating the data folder first, or replacing the guard program;
+- the tool letting the cable reach addresses outside 192.168.0.0/16, or the cable taking over the Internet after Wi-Fi drops;
+- a restore losing or corrupting the original configuration, or restoring onto another machine;
+- a status check reporting an unsafe state as "in effect".
+
+**Out of scope** (see "What not to claim" in [docs/en/architecture.md](docs/en/architecture.md)):
+
+- firewall and routes changed by software with administrator rights, group policy or security software;
+- an allowed LAN server relaying the Internet;
+- exits created by VPNs such as Tailscale, virtual machines, WSL/containers or kernel drivers;
+- the short window between DHCP adding a default route and the guard removing it (the firewall blocks traffic during that time).
+
+### Existing protections
+
+- Before running the backend, the window verifies the SHA-256 recorded at build time, then runs it from a folder only SYSTEM and administrators can write to.
+- External programs are always started by their full system path.
+- The data folder is locked down when it is created; a folder created by someone else first, or with unexpected permissions, is refused.
+- The guard's single-instance lock lives in the protected folder instead of a global mutex.
+

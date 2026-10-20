@@ -26,6 +26,7 @@ foreach ($name in @('backend.ps1','network-core.ps1','Restore.ps1','Restore.cmd'
     Copy-Item -LiteralPath (Join-Path $scripts $name) -Destination (Join-Path $dest $name) -Force
 }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'docs\使用说明.txt') -Destination (Join-Path $dest '使用说明.txt') -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'docs\en\user-guide.md') -Destination (Join-Path $dest 'User-Guide.en.md') -Force
 $postboot=Join-Path $dest 'postboot'
 New-Item -ItemType Directory -Path $postboot -Force | Out-Null
 Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot 'src\postboot') -File | ForEach-Object {Copy-Item -LiteralPath $_.FullName -Destination $postboot -Force}

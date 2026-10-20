@@ -1,4 +1,6 @@
-﻿双网分流 · Windows 小工具
+双网分流 · Windows 小工具
+
+English version: User-Guide.en.md (in the program folder) / docs/en/user-guide.md (in the repository)
 
 用途
 Wi-Fi 连接手机热点，访问公网；网线只访问 192.168.x.x 内网，端口不额外限制。
