@@ -38,7 +38,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\Run-Tests.ps1
 - 每个测试先 dot-source `tests/TestSupport.ps1`，它会把所有网络、防火墙、DNS、网卡和计划任务命令替换成会报错的函数。新测试也要这样做，再为用到的命令写替身。
 - 把被测脚本指向临时目录后，调用 `Use-TestRoot`。它会确认路径没有指向 `C:\ProgramData`，并挡住以完整路径调用的 `netsh`、`ipconfig`。
 - 测试数据一律虚构，可以用 `192.0.2.0/24`、`203.0.113.0/24` 这类文档专用地址。
-- 改了界面，用 `双网分流.exe --preview <目录>` 生成 100%–175% 的截图。看一遍截图，并确认 `layout-report.txt` 里没有裁字、越界和重叠。
+- 改了界面，用 `双网分流.exe --preview <目录>` 生成 100%–175% 的截图。看一遍截图，并确认 `layout-report.txt` 里没有裁字、越界和重叠。加上 `--screen 1024x768` 可以模拟小屏幕。
 
 ## 不要提交
 

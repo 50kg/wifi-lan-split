@@ -37,13 +37,14 @@ try {
     }
 
     if ($admin) {
-        $preview=Join-Path $build 'preview'
-        $p=Start-Process -FilePath (Join-Path $build '双网分流.exe') -ArgumentList @('--preview',('"'+$preview+'"')) -PassThru
-        if (-not $p.WaitForExit(120000)) {Stop-Process -Id $p.Id -Force; Add-Result 'UI layout' 'FAIL' 'preview did not finish'}
-        else {
+        # Once on this screen, once as if on a 1024x768 screen, where larger scales have to scroll.
+        foreach ($case in @(@{Name='UI layout';Args=@();Label='this screen'},@{Name='UI small screen';Args=@('--screen','1024x768');Label='a 1024x768 screen'})) {
+            $preview=Join-Path $build ('preview-'+[guid]::NewGuid().ToString('N'))
+            $p=Start-Process -FilePath (Join-Path $build '双网分流.exe') -ArgumentList (@('--preview',('"'+$preview+'"'))+$case.Args) -PassThru
+            if (-not $p.WaitForExit(150000)) {Stop-Process -Id $p.Id -Force; Add-Result $case.Name 'FAIL' 'preview did not finish'; continue}
             $report=(Get-Content (Join-Path $preview 'layout-report.txt') -Raw -Encoding UTF8).Trim()
             $shots=@(Get-ChildItem $preview -Filter *.png).Count
-            Add-Result 'UI layout' $(if ($report -like 'no clipping*' -and $shots -ge 40) {'PASS'} else {'FAIL'}) ([string]$shots+' screenshots at 100-175%: '+$report)
+            Add-Result $case.Name $(if ($report -like 'no clipping*' -and $shots -ge 40) {'PASS'} else {'FAIL'}) ([string]$shots+' screenshots at 100-175% on '+$case.Label+': '+$report)
         }
     } else {Add-Result 'UI layout' 'SKIP' 'the GUI needs an elevated PowerShell'}
 } finally {

@@ -1,5 +1,5 @@
 ﻿{
-    "CheckedAt":  "2026-10-20T08:46:44.3020247+02:00",
+    "CheckedAt":  "2026-10-20T11:45:19.8818576+02:00",
     "Passed":  true,
     "Results":  [
                     {
@@ -40,7 +40,12 @@
                     {
                         "Check":  "UI layout",
                         "Outcome":  "PASS",
-                        "Detail":  "52 screenshots at 100-175%: no clipping, overflow or overlap found"
+                        "Detail":  "52 screenshots at 100-175% on this screen: no clipping, overflow or overlap found"
+                    },
+                    {
+                        "Check":  "UI small screen",
+                        "Outcome":  "PASS",
+                        "Detail":  "69 screenshots at 100-175% on a 1024x768 screen: no clipping, overflow or overlap found"
                     }
                 ],
     "NetworkChangesPerformed":  false,
@@ -54,7 +59,7 @@
                         },
                         {
                             "File":  "src\\native\\LanSplit.cs",
-                            "SHA256":  "3B45D652959977CBAD534C5577F5ACB8A08A9DEDB48822E0039C3742BC6C7B6A"
+                            "SHA256":  "A98AC62D39F334F01214DC92803596693222D7A1225199565109309D2854CF18"
                         },
                         {
                             "File":  "src\\native\\RouteGuard.cs",

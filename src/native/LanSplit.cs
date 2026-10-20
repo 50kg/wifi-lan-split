@@ -575,6 +575,8 @@ public class SplitWindow : Form {
     }
 
     void LayoutAll() {
+        // Positions below are content coordinates; a scrolled window would offset them, so lay out from the top.
+        if (AutoScroll) AutoScrollPosition = Point.Empty;
         int W = ui.Px(ContentWidth), pad = ui.Px(28), iconBig = ui.Px(32), iconSmall = ui.Px(16);
         int textX = pad + iconBig + ui.Px(14), textW = W - textX - pad;
         // Status band: conclusion, what it means right now, and the one action that fixes it.
@@ -664,10 +666,15 @@ public class SplitWindow : Form {
         }
         disclaimer.MaximumSize = new Size(W - pad * 2, 0);
         disclaimer.Location = new Point(pad, y); y = disclaimer.Bottom + ui.Px(14);
-        // Fit the window to the content; scroll only when the screen is too short.
-        int maxH = Screen.FromControl(this).WorkingArea.Height - (Height - ClientSize.Height) - ui.Px(16);
-        if (y <= maxH) { AutoScroll = false; ClientSize = new Size(W, y); }
-        else { AutoScroll = true; AutoScrollMinSize = new Size(W, y); ClientSize = new Size(W + SystemInformation.VerticalScrollBarWidth, maxH); }
+        // Fit the window to the content; scroll only in the direction the screen is too small.
+        Rectangle work = Screen.FromControl(this).WorkingArea;
+        int screenW = PreviewScreen.Width > 0 ? PreviewScreen.Width : work.Width;
+        int screenH = PreviewScreen.Height > 0 ? PreviewScreen.Height : work.Height;
+        int maxW = screenW - (Width - ClientSize.Width), maxH = screenH - (Height - ClientSize.Height) - ui.Px(16);
+        if (y <= maxH && W <= maxW) { AutoScroll = false; ClientSize = new Size(W, y); return; }
+        bool tall = y > maxH, wide = W + (tall ? SystemInformation.VerticalScrollBarWidth : 0) > maxW;
+        AutoScroll = true; AutoScrollMinSize = new Size(W, y);
+        ClientSize = new Size(Math.Min(W + (tall ? SystemInformation.VerticalScrollBarWidth : 0), maxW), Math.Min(y + (wide ? SystemInformation.HorizontalScrollBarHeight : 0), maxH));
     }
 
     // Distance from a label's left edge to the first drawn pixel of its text, so other things can line up with the glyphs.
@@ -911,6 +918,8 @@ public class SplitWindow : Form {
         walk(rootControl);
         return problems;
     }
+    // Preview only: pretend the screen's working area has this size, to exercise the scrolling layout on a large monitor.
+    static Size PreviewScreen;
     static void RunPreview(string folder, float[] scales) {
         Directory.CreateDirectory(folder);
         StringBuilder report = new StringBuilder();
@@ -977,7 +986,10 @@ public class SplitWindow : Form {
     [STAThread] public static int Main(string[] args) {
         Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
         if (args.Length > 1 && args[0] == "--preview") {
-            float[] scales = args.Length > 2 ? args.Skip(2).Select(a => float.Parse(a, System.Globalization.CultureInfo.InvariantCulture)).ToArray() : new[] { 1f, 1.25f, 1.5f, 1.75f };
+            List<string> rest = args.Skip(2).ToList();
+            int at = rest.IndexOf("--screen");
+            if (at >= 0 && at + 1 < rest.Count) { string[] wh = rest[at + 1].Split('x'); PreviewScreen = new Size(int.Parse(wh[0]), int.Parse(wh[1])); rest.RemoveRange(at, 2); }
+            float[] scales = rest.Count > 0 ? rest.Select(a => float.Parse(a, System.Globalization.CultureInfo.InvariantCulture)).ToArray() : new[] { 1f, 1.25f, 1.5f, 1.75f };
             RunPreview(args[1], scales);
             return 0;
         }
