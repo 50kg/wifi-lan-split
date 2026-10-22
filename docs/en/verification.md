@@ -57,7 +57,8 @@ In disk/ring capture mode the counters and the frames written to disk disagreed:
   - Diagnosis version 2 runs like the backend and records the full exception chain.
   - `tests/Test-ModulePath.ps1` covers all of the above; it fails with exactly this error against the `backend.ps1` from before the fix.
   - Version 2 was run on the author's machine with three module paths (PowerShell 7 look-alike, normal, a non-fatal import error); its conclusions and causes were as expected.
-- Not verified: the actual cause on the reporter's machine, and how the fixed version behaves there. This waits for the new version's log and a version 2 diagnosis report.
+- The reporter later said the tool works for them now; these changes were released as v1.0.1.
+- Not confirmed: the actual cause on the reporter's machine. No log that names the cause was received; if it happens again, the new version's log adds the cause after the message.
 
 ## Still to verify
 

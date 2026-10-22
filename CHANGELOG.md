@@ -2,7 +2,7 @@
 
 **简体中文** | [English](#english)
 
-## 未发布
+## v1.0.1 — 2026-10-22
 
 - 修复：从 PowerShell 7 窗口启动，或系统里的模块路径（PSModulePath）包含 PowerShell 7 的模块时，每次检查和操作都失败，提示 “The 'Get-Acl' command was found in the module 'Microsoft.PowerShell.Security', but the module could not be loaded”。原因是 Windows PowerShell 先找到了 PowerShell 7 的同名模块，加载失败。后台现在只加载 Windows PowerShell 自带的模块；重启后检查脚本也一样。
 - 安全：以管理员身份运行的后台不再从用户自己能写的“文档\WindowsPowerShell\Modules”加载模块。
@@ -52,7 +52,7 @@
 
 ## English
 
-### Unreleased
+### v1.0.1 — 2026-10-22
 
 - Fix: when the tool was started from a PowerShell 7 window, or the system module path (PSModulePath) included PowerShell 7's modules, every check and action failed with "The 'Get-Acl' command was found in the module 'Microsoft.PowerShell.Security', but the module could not be loaded". Windows PowerShell found PowerShell 7's module of the same name first and could not load it. The backend now loads only Windows PowerShell's own modules, and so does the post-reboot check.
 - Security: the elevated backend no longer loads modules from the user's own writable `Documents\WindowsPowerShell\Modules`.

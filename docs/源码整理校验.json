@@ -1,5 +1,5 @@
 ﻿{
-    "CheckedAt":  "2026-10-22T09:27:29.5063601+02:00",
+    "CheckedAt":  "2026-10-22T09:53:09.8690223+02:00",
     "Passed":  true,
     "Results":  [
                     {
@@ -68,7 +68,7 @@
                         },
                         {
                             "File":  "src\\native\\app.manifest",
-                            "SHA256":  "4F75636A7667064EDC5C7B21F1B68D65272E958B8A12A18B74F0DA97C8C3B1C8"
+                            "SHA256":  "5F1FBAE80CF0BC0873D63E86E9B3441BD0AC949528EBE1782283D30CA39D76E8"
                         },
                         {
                             "File":  "src\\native\\LanSplit.cs",
