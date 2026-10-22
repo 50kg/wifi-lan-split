@@ -115,6 +115,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\Run-Tests.ps1
 src/native/        WinForms 界面 LanSplit.cs、路由看守 RouteGuard.cs、程序清单
 src/powershell/    backend.ps1（检查/启用/修复/续租/还原入口）、network-core.ps1（备份、防火墙、路由、DNS）、离线还原 Restore.cmd
 src/postboot/      可选的重启后一次性检查脚本
+src/diagnostics/   只读诊断脚本（PowerShell 模块加载问题），构建时复制到程序文件夹
 tests/             隔离测试与测试运行器
 docs/              中文文档：使用说明、架构与安全边界、验证记录；docs/en/ 是英文版
 build.ps1          只编译和打包到 dist/，不安装、不启动

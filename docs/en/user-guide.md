@@ -110,6 +110,7 @@ Checks only read the configuration. They never disconnect Wi-Fi and never captur
 - `RouteGuard.exe`: the background route guard. Do not run it by hand; the window deploys it.
 - `backend.ps1` / `network-core.ps1`: readable configuration, check and restore logic.
 - `Restore.cmd` / `Restore.ps1`: offline restore entry points.
+- `diagnostics\诊断PowerShell模块.cmd`: a read-only diagnosis. If the window reports that a command "was found in the module …, but the module could not be loaded", run it the way you usually start the tool (double-click, or from the same terminal window) and send the report it writes to the desktop to the developer.
 
 The source is in the repository's `src` folder; rebuild with `build.ps1` in the repository root.
 

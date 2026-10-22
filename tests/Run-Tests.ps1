@@ -27,7 +27,7 @@ try {
     $out=& $powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project 'build.ps1') -OutputDirectory $build 2>&1
     Add-Result 'Build' $(if ($LASTEXITCODE -eq 0) {'PASS'} else {'FAIL'}) $(if ($LASTEXITCODE -eq 0) {'GUI and RouteGuard compile (temp folder)'} else {($out | Out-String).Trim()})
 
-    $tests=@(@{Name='Test-Restore';Args=@()},@{Name='Test-Setup';Args=@()},@{Name='Test-Status';Args=@()},@{Name='Test-Guard';Args=@()},@{Name='Test-Engine';Args=@('-BuildOutput',$build);Admin=$true})
+    $tests=@(@{Name='Test-Restore';Args=@()},@{Name='Test-Setup';Args=@()},@{Name='Test-Status';Args=@()},@{Name='Test-Guard';Args=@()},@{Name='Test-ModulePath';Args=@()},@{Name='Test-Engine';Args=@('-BuildOutput',$build);Admin=$true})
     foreach ($t in $tests) {
         if ($t.Admin -and -not $admin) {Add-Result $t.Name 'SKIP' 'needs an elevated PowerShell (sets folder owners in a temp folder)'; continue}
         $out=& $powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot ($t.Name+'.ps1')) @($t.Args) 2>&1

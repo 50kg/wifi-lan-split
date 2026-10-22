@@ -1,5 +1,8 @@
 ﻿param([ValidateSet('Status','Setup','Restore','Renew','Repair')][string]$Mode='Status',[string]$ResultFile,[switch]$Console)
 $ErrorActionPreference='Stop'
+# Load modules only from Windows PowerShell's own folder, before any cmdlet runs. An inherited PowerShell 7 path makes
+# Get-Acl fail to load, and the user's Documents module folder would let an unelevated program supply code to this script.
+$env:PSModulePath=[IO.Path]::Combine($PSHOME,'Modules')
 $Root=Join-Path $env:ProgramData 'WifiLanSplit'
 $Package=$PSScriptRoot
 $TaskName='WifiLanDefaultRouteGuard'
@@ -349,6 +352,30 @@ function Get-Status {
         Busy=[bool]$busy; Summary=$summary; Checks=$checks.ToArray(); Adapters=$adapterRows
     }
 }
+# A failure's message plus the inner causes that add something. A module that cannot be auto-loaded only names the
+# module, and without the reason the log cannot tell what went wrong.
+function Get-FailureMessage($ErrorRecord) {
+    $message=$ErrorRecord.Exception.Message
+    $inner=@(for ($e=$ErrorRecord.Exception.InnerException; $e; $e=$e.InnerException) {$e})
+    $causes=New-Object System.Collections.Generic.List[string]
+    # An error that only $ErrorActionPreference turned fatal during the import is not attached; importing the module
+    # once more, the same way, shows it. A second import that works points to something passing, not a broken module.
+    if (-not $inner.Count -and $ErrorRecord.FullyQualifiedErrorId -like 'CouldNotAutoloadMatchingModule*') {
+        try {
+            $command=$ErrorRecord.Exception.CommandName
+            foreach ($module in @(Get-Module -ListAvailable | Where-Object {$_.ExportedCommands.ContainsKey($command)} | Select-Object -First 1)) {
+                try {Import-Module $module.Name -ErrorAction Stop; $causes.Add('再次加载 '+$module.Name+' 成功，可能是暂时性问题')}
+                catch {$inner=@(for ($e=$_.Exception; $e; $e=$e.InnerException) {$e})}
+            }
+        } catch {}
+    }
+    foreach ($e in $inner) {
+        $text=($e.Message -replace '\s+',' ').Trim()
+        if ($text -and -not $message.Contains($text) -and -not $causes.Contains($text)) {$causes.Add($text)}
+    }
+    if ($causes.Count) {$message+='（原因：'+($causes -join '；')+'）'}
+    $message
+}
 # Tests dot-source this file for its functions only.
 if ($MyInvocation.InvocationName -eq '.') {return}
 $success=$false; $message=''; $status=$null; $exitCode=0; $transcript=$false
@@ -415,7 +442,7 @@ try {
     if ($Mode -eq 'Status') {$message=if ($status.Healthy) {'检查完成：分流已生效。'} else {'检查完成：'+$status.Summary.Title+'。'}}
     $success=$true
 } catch {
-    $message=$_.Exception.Message
+    $message=Get-FailureMessage $_
     $exitCode=1
     try {$status=Get-Status} catch {}
 }

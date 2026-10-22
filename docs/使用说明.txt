@@ -85,6 +85,7 @@ Wi-Fi 连接手机热点，访问公网；网线只访问 192.168.x.x 内网，�
 - RouteGuard.exe：后台路由看守。请勿单独双击，界面设置时会部署。
 - backend.ps1 / network-core.ps1：可读的配置、检查和还原逻辑。
 - Restore.cmd / Restore.ps1：离线还原入口。
+- diagnostics\诊断PowerShell模块.cmd：只读诊断。界面提示某个命令“was found in the module …, but the module could not be loaded”时，用平时打开本工具的方式运行它（双击，或在同一个终端窗口里运行），把桌面上生成的报告发给开发者。
 源码在项目的 src 目录；重新编译用项目根目录的 build.ps1。
 
 这是本地生成的未签名工具。不需要下载运行库、浏览器或云服务，配置操作需要管理员权限。

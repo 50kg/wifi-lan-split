@@ -15,6 +15,9 @@ The window runs as administrator, so it never executes the scripts in its own fo
   - If a file in the program folder was modified or is missing, the window refuses to run and says why.
 - The backend's output is not piped back to the window. The backend writes it to `last-operation.log` in the data folder, so closing the window cannot interrupt a change half way.
 - PowerShell, Explorer, Notepad and Control Panel are started by their full system path, so files with the same name in the program folder or current folder cannot hijack them.
+- Before running any command, the backend limits the module search path to Windows PowerShell's own `System32\WindowsPowerShell\v1.0\Modules`:
+  - an inherited PowerShell 7 path cannot put a same-named module ahead of the built-in one (otherwise `Get-Acl` fails to load and every check fails);
+  - the elevated backend never loads modules from the user's own writable `Documents\WindowsPowerShell\Modules`.
 
 The data folder `C:\ProgramData\WifiLanSplit` is created by the window or the backend. It is created already restricted to SYSTEM and Administrators, owned by Administrators, without inheriting ProgramData's "users may create files" permission.
 

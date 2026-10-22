@@ -143,6 +143,7 @@ UI preview with made-up data (no backend is called):
 src/native/        WinForms window (LanSplit.cs), route guard (RouteGuard.cs), application manifest
 src/powershell/    backend.ps1 (check / enable / repair / renew / restore), network-core.ps1 (backup, firewall, routes, DNS), offline Restore.cmd
 src/postboot/      optional one-time post-reboot check
+src/diagnostics/   read-only diagnosis for PowerShell module loading problems, copied into the program folder by the build
 tests/             isolated tests and the test runner
 docs/              Chinese docs; docs/en/ holds the English versions
 build.ps1          compiles and packages into dist/; installs and starts nothing

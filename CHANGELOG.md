@@ -4,6 +4,11 @@
 
 ## 未发布
 
+- 修复：从 PowerShell 7 窗口启动，或系统里的模块路径（PSModulePath）包含 PowerShell 7 的模块时，每次检查和操作都失败，提示 “The 'Get-Acl' command was found in the module 'Microsoft.PowerShell.Security', but the module could not be loaded”。原因是 Windows PowerShell 先找到了 PowerShell 7 的同名模块，加载失败。后台现在只加载 Windows PowerShell 自带的模块；重启后检查脚本也一样。
+- 安全：以管理员身份运行的后台不再从用户自己能写的“文档\WindowsPowerShell\Modules”加载模块。
+- 日志：模块加载失败时，界面日志和 `last-operation-error.txt` 在报错后面写出原因（“（原因：…）”）。原因只在后台“出错即停”时才变成致命错误、没有附在报错上的，后台会再导入一次模块把它找出来；再次导入成功的，注明“可能是暂时性问题”。其他报错保持原样。
+- 新增：程序文件夹里的 `diagnostics\诊断PowerShell模块.cmd`。只读，不需要管理员权限。它按后台检查状态的方式运行（出错即停、先加载网络模块，再调用 Get-Acl），记录完整的异常链，并写出开机时间、是否等待重启、已登记的安全软件，最后在桌面生成一份报告，用来排查这类问题。
+- 测试：新增 `Test-ModulePath`，用仿 PowerShell 7 的模块复现这个问题，并确认后台不受影响；同时检查各种模块加载失败时，报错里都写出了原因。
 - 修复：屏幕比窗口窄（例如 1024×768 屏幕配 175% 缩放）时，界面会超出屏幕，内容整体上移几个像素。现在宽度和高度不够时都会出现滚动条，并且每次重新排版都从顶部开始。
 - 测试：界面布局检查增加一轮“模拟 1024×768 屏幕”；预览模式新增 `--screen 宽x高` 参数。
 - 文档：README、使用说明、架构与安全边界、验证记录、需求说明增加英文版；程序文件夹里多了 `User-Guide.en.md`。
@@ -49,6 +54,11 @@
 
 ### Unreleased
 
+- Fix: when the tool was started from a PowerShell 7 window, or the system module path (PSModulePath) included PowerShell 7's modules, every check and action failed with "The 'Get-Acl' command was found in the module 'Microsoft.PowerShell.Security', but the module could not be loaded". Windows PowerShell found PowerShell 7's module of the same name first and could not load it. The backend now loads only Windows PowerShell's own modules, and so does the post-reboot check.
+- Security: the elevated backend no longer loads modules from the user's own writable `Documents\WindowsPowerShell\Modules`.
+- Logging: when a module fails to load, the window's log and `last-operation-error.txt` now add the cause after the message ("（原因：…）"). If the cause only became fatal through the backend's "stop on error" setting and so is not attached to the error, the backend imports the module once more to find it; if that second import works, it says the problem may be passing. Other messages are unchanged.
+- New: `diagnostics\诊断PowerShell模块.cmd` in the program folder. Read-only and without administrator rights. It runs like the backend's status check (stop on error, network modules first, then Get-Acl), records the full exception chain, and notes the last boot time, whether a reboot is pending and which security software is registered. It writes everything to a report on the desktop, for diagnosing this kind of problem.
+- Tests: new `Test-ModulePath` reproduces the problem with a PowerShell 7 look-alike module and checks that the backend is not affected. It also checks that the failure message names the cause for each kind of module load failure.
 - Fix: on a screen narrower than the window (for example 1024×768 at 175% scaling) the window overflowed the screen and its content shifted up a few pixels. It now scrolls when either the width or the height does not fit, and every layout pass starts from the top.
 - Tests: the UI layout check also runs on a simulated 1024×768 screen; preview mode gains a `--screen WxH` option.
 - Docs: English versions of the README, user guide, architecture, verification record and requirements; the program folder now includes `User-Guide.en.md`.

@@ -1,11 +1,11 @@
 ﻿{
-    "CheckedAt":  "2026-10-20T11:52:10.3930355+02:00",
+    "CheckedAt":  "2026-10-22T09:27:29.5063601+02:00",
     "Passed":  true,
     "Results":  [
                     {
                         "Check":  "Syntax",
                         "Outcome":  "PASS",
-                        "Detail":  "13 scripts parse, all UTF-8 with BOM"
+                        "Detail":  "15 scripts parse, all UTF-8 with BOM"
                     },
                     {
                         "Check":  "Build",
@@ -33,6 +33,11 @@
                         "Detail":  "PASS Test-Guard: update keeps the task and stages the copy first, failed swap restores the old guard, stuck guard restarted, healthy guard untouched, foreign task replaced, old heartbeat not accepted."
                     },
                     {
+                        "Check":  "Test-ModulePath",
+                        "Outcome":  "PASS",
+                        "Detail":  "PASS Test-ModulePath: a PowerShell 7 Security module ahead on the path reproduces the Get-Acl failure; the backend loads modules only from Windows PowerShell\u0027s own folder; failure messages name why a module did not load (import error, exception, passing error) and leave other messages unchanged."
+                    },
+                    {
                         "Check":  "Test-Engine",
                         "Outcome":  "PASS",
                         "Detail":  "PASS Test-Engine: locked data folder (GUI and backend), loose folder tightened, verified copy, tampered and missing files refused."
@@ -54,6 +59,14 @@
     "Note":  "Isolated checks only: mocked network commands, fictional data, temp folders. Not a substitute for a real deployment, reboot or packet-capture test.",
     "SourceFiles":  [
                         {
+                            "File":  "src\\diagnostics\\diagnose-powershell-modules.ps1",
+                            "SHA256":  "FB99CCACB06B01520492B0EEDB6525494C359285D5435A5397571EBE2F514179"
+                        },
+                        {
+                            "File":  "src\\diagnostics\\诊断PowerShell模块.cmd",
+                            "SHA256":  "2920BC07F85D145AC3362657E3C3650826405204BC7B8300B1442053369D5AF4"
+                        },
+                        {
                             "File":  "src\\native\\app.manifest",
                             "SHA256":  "4F75636A7667064EDC5C7B21F1B68D65272E958B8A12A18B74F0DA97C8C3B1C8"
                         },
@@ -67,7 +80,7 @@
                         },
                         {
                             "File":  "src\\postboot\\check-after-boot.ps1",
-                            "SHA256":  "C5A98CD289BBC1A281D34AFB13DACEC8B1528754AC49A6E5CC40F05F13486D80"
+                            "SHA256":  "D37B6821BF94187731E6F6FDB2751AE4E2F7D3C5DDC335FC2468C2C0952EAF5D"
                         },
                         {
                             "File":  "src\\postboot\\postboot-report-helper.ps1",
@@ -87,7 +100,7 @@
                         },
                         {
                             "File":  "src\\powershell\\backend.ps1",
-                            "SHA256":  "2C36DF5415DBBC41D8E755A4CD460E2510DF0874A9E45CA452F6C9218DB988B4"
+                            "SHA256":  "26A28091FCE97D296B4390F74180F83E0AD3D60173837F2AE28E76F3CADA496F"
                         },
                         {
                             "File":  "src\\powershell\\network-core.ps1",

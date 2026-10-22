@@ -1,5 +1,7 @@
 ﻿param([switch]$Preflight)
 $ErrorActionPreference='Stop'
+# Same as backend.ps1: only Windows PowerShell's own modules, so a PowerShell 7 path in the machine settings cannot break the check.
+$env:PSModulePath=[IO.Path]::Combine($PSHOME,'Modules')
 $Root=Join-Path $env:ProgramData 'WifiLanSplit'
 $Audit=Join-Path $Root 'PostBoot'
 $ConfigPath=Join-Path $Audit 'config.json'

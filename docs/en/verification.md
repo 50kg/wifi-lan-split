@@ -42,6 +42,23 @@ In disk/ring capture mode the counters and the frames written to disk disagreed:
 - The new backend's status check ran read-only on the author's machine. The verdict was "split in effect", with the earlier rule group correctly recognised as "only" one adapter, 0 wired default routes and the guard running. A before/after comparison of the data folder showed only the guard's own heartbeat file had changed.
 - GitHub Actions runs the same test suite on every push.
 
+## Get-Acl module load failure (2026-10-22)
+
+- Reported: every check failed with "The 'Get-Acl' command was found in the module 'Microsoft.PowerShell.Security', but the module could not be loaded".
+- Possible cause one (reproduced on the author's machine): the module path the backend inherited listed a PowerShell 7 style `Microsoft.PowerShell.Security` ahead of Windows PowerShell's own. Its types file repeats definitions Windows PowerShell already has, so loading it fails with "The member Path is already present". `Join-Path` and `Test-Path` are unaffected, so the first `Get-Acl` in the script is what fails. The backend now loads modules only from the built-in folder, which fixes this case.
+- Possible cause two (reproduced on the author's machine): the backend sets `$ErrorActionPreference='Stop'`. Any error during a module import that would otherwise not be fatal then becomes the same message. In this case the real cause is not attached to the error; it is only in `$Error`.
+- The reporter's first diagnosis (script version 1):
+  - no PowerShell 7, a normal system module path and no look-alike modules;
+  - `Get-Acl` worked with both module paths.
+
+  So it does not support cause one. But version 1 ran its child processes without "stop on error", so it also shows "normal" in the cause-two case (confirmed on the author's machine with a stand-in module). It cannot rule out cause two.
+- Changes that followed:
+  - The backend's failure message names the cause: from the inner exception, or, when there is none, by importing the module once more. If that second import works, it says the problem may be passing.
+  - Diagnosis version 2 runs like the backend and records the full exception chain.
+  - `tests/Test-ModulePath.ps1` covers all of the above; it fails with exactly this error against the `backend.ps1` from before the fix.
+  - Version 2 was run on the author's machine with three module paths (PowerShell 7 look-alike, normal, a non-fatal import error); its conclusions and causes were as expected.
+- Not verified: the actual cause on the reporter's machine, and how the fixed version behaves there. This waits for the new version's log and a version 2 diagnosis report.
+
 ## Still to verify
 
 - A complete walk-through of the new window's enable, repair, renew and restore flows on a real system.
